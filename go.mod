@@ -1,6 +1,6 @@
-module github.com/getporter/skeletor
+module github.com/getporter/fabric
 
-go 1.19
+go 1.18
 
 // These are replace directives copied from porter
 // When you use a newer version of Porter, if you run into trouble with go mod tidy
@@ -56,6 +56,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4-0.20210608040537-544b4180ac70 // indirect
 	github.com/google/go-containerregistry v0.13.0 // indirect
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect

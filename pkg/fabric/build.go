@@ -1,7 +1,8 @@
-package skeletor
+package fabric
 
 import (
 	"context"
+	"fmt"
 
 	"get.porter.sh/porter/pkg/exec/builder"
 	"gopkg.in/yaml.v2"
@@ -12,9 +13,9 @@ type BuildInput struct {
 	Config MixinConfig
 }
 
-// MixinConfig represents configuration that can be set on the skeletor mixin in porter.yaml
+// MixinConfig represents configuration that can be set on the fabric mixin in porter.yaml
 // mixins:
-// - skeletor:
+// - fabric:
 //	  clientVersion: "v0.0.0"
 
 type MixinConfig struct {
@@ -32,6 +33,19 @@ type MixinConfig struct {
 // 	--recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF && \
 // apt-get update && apt-get install azure-cli
 // `
+
+const dockerfileLines = `RUN apt-get update && apt-get install wget -y
+RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y gpg
+RUN wget -O - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o microsoft.asc.gpg
+RUN mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+RUN wget https://packages.microsoft.com/config/debian/11/prod.list
+RUN mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+RUN chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+RUN chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+RUN apt-get update && \
+    apt-get install -y dotnet-sdk-7.0
+`
 
 // Build will generate the necessary Dockerfile lines
 // for an invocation image using this mixin
@@ -54,10 +68,10 @@ func (m *Mixin) Build(ctx context.Context) error {
 		m.ClientVersion = suppliedClientVersion
 	}
 
-	//fmt.Fprintf(m.Out, dockerfileLines)
+	fmt.Fprintf(m.Out, dockerfileLines)
 
 	// Example of pulling and defining a client version for your mixin
-	// fmt.Fprintf(m.Out, "\nRUN curl https://get.helm.sh/helm-%s-linux-amd64.tar.gz --output helm3.tar.gz", m.ClientVersion)
+	fmt.Fprintf(m.Out, "\nRUN curl https://get.helm.sh/helm-%s-linux-amd64.tar.gz --output helm3.tar.gz", m.ClientVersion)
 
 	return nil
 }
