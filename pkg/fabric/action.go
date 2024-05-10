@@ -80,7 +80,7 @@ type Instruction struct {
 }
 
 func (s Step) GetCommand() string {
-	return "CompositeSolution"
+	return "FabricCompositeSolution"
 }
 
 func (s Step) GetWorkingDir() string {
